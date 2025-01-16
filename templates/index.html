@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Highlight</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search and Highlight</h1>
+    <input type="text" id="searchInput" placeholder="Search..." />
+    <button onclick="fetchData()">Search</button>
+    <table id="dataTable">
+        <thead>
+            <tr id="headerRow"></tr>
+        </thead>
+        <tbody id="dataRows"></tbody>
+    </table>
+
+    <script>
+        const fetchData = async () => {
+            const query = document.getElementById('searchInput').value;
+            const response = await fetch('/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query })
+            });
+            const data = await response.json();
+            renderTable(data, query);
+        };
+
+        const renderTable = (data, query) => {
+            const headerRow = document.getElementById('headerRow');
+            const dataRows = document.getElementById('dataRows');
+            dataRows.innerHTML = '';
+            if (data.length === 0) {
+                headerRow.innerHTML = '';
+                dataRows.innerHTML = '<tr><td colspan="100%">No data found</td></tr>';
+                return;
+            }
+            const headers = Object.keys(data[0]);
+            headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+            dataRows.innerHTML = data.map(row => {
+                const cells = headers.map(header => {
+                    const value = row[header];
+                    const highlighted = query
+                        ? String(value).replace(new RegExp(query, 'gi'), match => `<span class="highlight">${match}</span>`)
+                        : value;
+                    return `<td>${highlighted}</td>`;
+                });
+                return `<tr>${cells.join('')}</tr>`;
+            }).join('');
+        };
+
+        // Load all data on page load
+        fetchData();
+    </script>
+</body>
+</html>
