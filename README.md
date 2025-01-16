@@ -52,9 +52,6 @@ ___
    1. Temporarily Allow Script Execution
 
 You can change the execution policy for your current session to allow running the activate.ps1 script:
-```
-activate.ps1
-```
     Open PowerShell as Administrator.
     Run the following command to temporarily allow script execution:
 ```
@@ -67,3 +64,4 @@ Now, activate your virtual environment:
 ![image](https://github.com/user-attachments/assets/4af28d42-874f-47a3-ad50-efaa7d60acf9)
 
 ___
+all the data has been genrated using ai and used for education purpose only.
